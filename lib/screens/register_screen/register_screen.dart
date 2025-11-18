@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter1project/common_widgets/app_button.dart";
+import "package:flutter1project/screens/login_screen/login_screen.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 
 class RegisterScreen extends StatefulWidget {
@@ -99,7 +100,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 },isLoading: isLoading,),
                 const Spacer(),
                 InkWell(
-                  onTap: () => {},
+                  onTap: () => {
+                    Navigator.push(context, 
+                    MaterialPageRoute(builder: (context) => const LoginScreen()))
+                  },
                   child: Text(
                     "Zaloguj sie ",
                     style: TextStyle(
@@ -151,5 +155,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       "name": userName,
       "creator" :currentUserId
     });
+
   } 
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter1project/details_screen.dart';
 import 'package:flutter1project/screens/announcments/announcment_screen.dart';
-// import 'package:flutter1project/screens/messenger/messenger_screen.dart';
+import 'package:flutter1project/screens/messenger/messenger_screen.dart';
 import 'package:flutter1project/screens/register_screen/register_screen.dart';
 // import 'package:flutter1project/screens/cat_fact_screen/cat_facts_screen.dart';
 // import 'package:flutter1project/screens/pokemon_screen/pokemon_screen.dart';
@@ -35,7 +35,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: RegisterScreen(),
+      home: Supabase.instance.client.auth.currentUser == null
+          ? const RegisterScreen()
+          : const MessengerScreen(),
     );
   }
 }
