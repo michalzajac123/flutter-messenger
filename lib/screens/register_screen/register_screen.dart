@@ -124,15 +124,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final supabaseInstance = Supabase.instance.client;
       final String email = _emailController.text.trim();
       final String password = _passwordController.text;
-
       await supabaseInstance.auth.signUp(password: password,email: email);
-      
+      addUserToDataBase();
+      setState(() {
+        isLoading = false;
+      });
     } catch (err) {
       setState(() {
         isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Błąd rejestracji: $err")),
+      );
+    }
+  }
+  Future<void> addUserToDataBase() async {
+    try {
+      final supabaseInstance = Supabase.instance.client;
+      final userName = _nameController.text.trim();
+
+      await supabaseInstance.from("users").insert({
+        "name": userName,
+      });
+    } catch (err) {
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Błąd dodawania użytkownika do bazy danych: $err")),
       );
     }
   }
