@@ -57,6 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if(value != null && value.length < 3) {
                       return "Imie musi mieć conajmniej 3 znaki";
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 20),
@@ -69,6 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if(value !=null &&value.isEmpty) {
                       return "To pole nie moze byc puste";
                     }
+                    return null;
                   },
                 ),
                 SizedBox(height: 20),
@@ -85,6 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if(value != null && value.length < 6) {
                       return "Hasło musi mieć conajmniej 6 znaków";
                     }
+                    return null;
                   }
                 ),
 
@@ -125,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final String email = _emailController.text.trim();
       final String password = _passwordController.text;
       await supabaseInstance.auth.signUp(password: password,email: email);
-      addUserToDataBase();
+      await createUser();
       setState(() {
         isLoading = false;
       });
@@ -138,21 +141,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     }
   }
-  Future<void> addUserToDataBase() async {
-    try {
-      final supabaseInstance = Supabase.instance.client;
-      final userName = _nameController.text.trim();
 
-      await supabaseInstance.from("users").insert({
-        "name": userName,
-      });
-    } catch (err) {
-      setState(() {
-        isLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Błąd dodawania użytkownika do bazy danych: $err")),
-      );
-    }
-  }
+  Future<void> createUser() async {
+    final supabaseInstance = Supabase.instance.client;
+    final userName = _nameController.text.trim();
+    final currentUserId = supabaseInstance.auth.currentUser?.id ?? "";
+
+    await supabaseInstance.from("users").insert({
+      "name": userName,
+      "creator" :currentUserId
+    });
+  } 
 }
